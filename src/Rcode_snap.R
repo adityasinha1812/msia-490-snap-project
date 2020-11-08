@@ -1,4 +1,4 @@
-
+#testing
 if (!"igraph" %in% installed.packages()) install.packages("igraph") ## this package is a network analysis tool
 if (!"statnet" %in% install.packages()) install.packages("statnet") ## this package is another popular network analysis tool
 
