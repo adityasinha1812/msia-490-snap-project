@@ -80,3 +80,18 @@ giantGraph %>%
        vertex.label.cex = .5,
        vertex.label.color = 'black')
 
+sna_g <- igraph::get.adjacency(giantGraph, sparse=FALSE) %>% network::as.network.matrix()
+detach('package:igraph')
+library(statnet)
+degree(sna_g, cmode = 'indegree')
+centralities <- data.frame('node_name' = as.character(network.vertex.names(sna_g)),
+                           'in_degree' = degree(sna_g, cmode = 'indegree'))
+centralities$out_degree <- degree(sna_g, cmode = 'outdegree')
+centralities$betweenness <- betweenness(sna_g)
+centralities$incloseness <- igraph::closeness(giantGraph, mode = 'in')
+centralities$outcloseness <- igraph::closeness(giantGraph, mode = 'out')
+centralities$eigen <- evcent(sna_g)
+centralities$netconstraint <- igraph::constraint(giantGraph)
+centralities$authority <- igraph::authority_score(giantGraph, scale = TRUE)$`vector`
+centralities$hub <- igraph::hub_score(giantGraph, scale = TRUE)$`vector`
+View(centralities)
