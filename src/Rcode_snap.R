@@ -5,11 +5,12 @@ install.packages("intergraph")
 
 
 library(statnet)
+library(igraph)
 library(dplyr)
 library('intergraph')
 detach(package:igraph)
 sessionInfo() ## check other attached packages. If magrittr, vosonSML, & igraph are listed there, you're ready!
-setwd("C:/Users/agarw/Downloads/data")
+setwd("C:/Users/agarw/OneDrive/Desktop/NU_Notes/MSIA_490/SNAP/msia-490-snap-project/data")
 list.files()
 connectionsFromEdgesAll <- read.csv("edges_all.csv")
 # View the first rows of the edgelist to make sure it imported correctly:
@@ -56,7 +57,7 @@ connections
 set.vertex.attribute(connections,"contact.color",cCodes)
 connections
 get.vertex.attribute(connections,"contact.color")
-
+par(mar = c(0, 0, 0, 0)) 
 plot(connections, vertex.col = "contact.color")
 
 # check if the network is directed or undirected
@@ -80,14 +81,13 @@ par(mar = c(0, 0, 0, 0))
 connections_igraph <- asIgraph(connections)
 connections_igraph
 V(connections_igraph)$color <- cCodes # Have to give valid R color names
-comp <- components(connections_igraph)
-comp
+
 connections_igraph %>% 
   plot(.,
        layout = layout_with_fr(.), ## Fruchterman-Reingold layout
        edge.arrow.size = .4, ## arrow size
        vertex.size = 5, ## node size
-       #vertex.label = NA,
+       vertex.label = NA,
        vertex.label.cex = .4, ## node label size
        vertex.label.color = 'black') ## node label color
 
@@ -107,11 +107,12 @@ giantGraph %>%
        layout = layout_with_kk(.), ## Davidson and Harel graph layout
        edge.arrow.size = .4,
        vertex.size = 6,
+       vertex.label = NA,
        vertex.label.cex = .5,
        vertex.label.color = 'black')
 
 
-<<<<<<< Updated upstream
+#<<<<<<< Updated upstream
 sna_g <- igraph::get.adjacency(giantGraph, sparse=FALSE) %>% network::as.network.matrix()
 detach('package:igraph')
 library(statnet)
@@ -127,7 +128,7 @@ centralities$netconstraint <- igraph::constraint(giantGraph)
 centralities$authority <- igraph::authority_score(giantGraph, scale = TRUE)$`vector`
 centralities$hub <- igraph::hub_score(giantGraph, scale = TRUE)$`vector`
 View(centralities)
-=======
+#=======
 # Convert to igraph for plotting
 # (Need to have intergraph package installed and loaded)
->>>>>>> Stashed changes
+#>>>>>>> Stashed changes
