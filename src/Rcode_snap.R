@@ -110,7 +110,7 @@ giantGraph %>%
 
 
 #<<<<<<< Updated upstream
-sna_g <- igraph::get.adjacency(giantGraph, sparse=FALSE) %>% network::as.network.matrix()
+sna_g <- igraph::get.adjacency(connections_igraph, sparse=FALSE) %>% network::as.network.matrix()
 detach('package:igraph')
 library(statnet)
 degree(sna_g, cmode = 'indegree')
@@ -118,12 +118,12 @@ centralities <- data.frame('node_name' = as.character(network.vertex.names(sna_g
                            'in_degree' = degree(sna_g, cmode = 'indegree'))
 centralities$out_degree <- degree(sna_g, cmode = 'outdegree')
 centralities$betweenness <- betweenness(sna_g)
-centralities$incloseness <- igraph::closeness(giantGraph, mode = 'in')
-centralities$outcloseness <- igraph::closeness(giantGraph, mode = 'out')
+centralities$incloseness <- igraph::closeness(connections_igraph, mode = 'in')
+centralities$outcloseness <- igraph::closeness(connections_igraph, mode = 'out')
 centralities$eigen <- evcent(sna_g)
-centralities$netconstraint <- igraph::constraint(giantGraph)
-centralities$authority <- igraph::authority_score(giantGraph, scale = TRUE)$`vector`
-centralities$hub <- igraph::hub_score(giantGraph, scale = TRUE)$`vector`
+centralities$netconstraint <- igraph::constraint(connections_igraph)
+centralities$authority <- igraph::authority_score(connections_igraph, scale = TRUE)$`vector`
+centralities$hub <- igraph::hub_score(connections_igraph, scale = TRUE)$`vector`
 View(centralities)
 #=======
 # Convert to igraph for plotting
