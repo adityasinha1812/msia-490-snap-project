@@ -1,8 +1,6 @@
-#testing
 if (!"igraph" %in% installed.packages()) install.packages("igraph") ## this package is a network analysis tool
 if (!"statnet" %in% install.packages()) install.packages("statnet") ## this package is another popular network analysis tool
 install.packages("intergraph")
-
 
 library(statnet)
 library(igraph)
@@ -10,9 +8,8 @@ library(dplyr)
 library('intergraph')
 detach(package:igraph)
 sessionInfo() ## check other attached packages. If magrittr, vosonSML, & igraph are listed there, you're ready!
-setwd("C:/Users/agarw/OneDrive/Desktop/NU_Notes/MSIA_490/SNAP/msia-490-snap-project/data")
 list.files()
-connectionsFromEdgesAll <- read.csv("edges_all.csv")
+connectionsFromEdgesAll <- read.csv("../data/edges_all.csv")
 # View the first rows of the edgelist to make sure it imported correctly:
 head(connectionsFromEdgesAll)
 # Convert the edgelist to a network object in statnet format:
@@ -132,3 +129,150 @@ View(centralities)
 # Convert to igraph for plotting
 # (Need to have intergraph package installed and loaded)
 #>>>>>>> Stashed changes
+
+######################################################################################
+#
+# Part IV: Global Network Proporties
+#
+######################################################################################
+# If you want to go back to igraph analysis, don't forget detaching 'sna' and 'network' first
+# before recalling 'igraph'
+#  go back to 'igraph'
+detach('package:statnet', unload = TRUE)
+library(igraph)
+
+kcore <- giantGraph %>% graph.coreness(.) ## calculate k-cores
+kcore ## show the results of k-core decomposition
+
+## Plot a graph colored by the k-core decompotion results
+giantGraph %>% 
+  plot(.,
+       layout = layout_with_gem(.),
+       # layout = layout_with_sugiyama(.),
+       edge.arrow.size = .3,
+       vertex.size = 4,
+       vertex.color = adjustcolor(graph.coreness(.), alpha.f = .3),
+       vertex.label.cex = .5,
+       vertex.label.color = 'black',
+       mark.groups = by(seq_along(graph.coreness(.)), graph.coreness(.), invisible),
+       mark.shape = 1/4,
+       mark.col = rainbow(length(unique(graph.coreness(.))),alpha = .1),
+       mark.border = NA
+  )
+
+# Plot the number of clusters in the graph and their size
+# there are also other algorithms for this you may want to explore
+# below is using Newman-Girvan Algorithm (2003)
+# if communities do not make sense to you, replace with your choice
+# e.g., cluster_infomap, cluster_walktrap etc.
+cluster <- giantGraph %>% cluster_edge_betweenness() 
+## you'll see red warning messages since the edge betweennness algorithm is not designed for a directed graph
+## but you'll be able to see the results anyway.
+## if you want to use a more appropriate algorithm for a directed graph, try:
+# cluster <- giantGraph %>% cluster_walktrap()
+cluster
+
+# modularity measure
+modularity(cluster)
+
+# Find the number of clusters
+membership(cluster)   # affiliation list
+length(cluster) # number of clusters
+
+# Find the size the each cluster 
+# Note that communities with one node are isolates, or have only a single tie
+sizes(cluster) 
+
+# Visualize clusters - that puts colored blobs around the nodes in the same community.
+# You may want to remove vertex.label=NA to figure out what terms are clustered.
+cluster %>% plot(.,giantGraph,
+                 # layout = layout_with_gem(.),
+                 layout = layout_with_fr(giantGraph),
+                 edge.arrow.size = .3,
+                 vertex.size = 4,
+                 vertex.color = adjustcolor(membership(.), alpha.f = .3),
+                 vertex.label.cex = .5,
+                 vertex.label.color = 'black',
+                 mark.groups = by(seq_along(membership(.)), membership(.), invisible),
+                 mark.shape = 1/4,
+                 mark.col = rainbow(length(.),alpha = .1),
+                 mark.border = NA
+)
+
+
+# Examine the in-degree distribution
+giantGraph %>% degree.distribution(.,mode="in") %>% 
+  plot(., col = 'black', pch = 19, cex = 1.5,
+       main = 'In-degree Distribution',
+       ylab = 'Density',
+       xlab = 'In-degree')
+# CCDF - Complementary Cumulative Distribution Function
+# Plot a log-log plot of in-degree distribution
+giantGraph %>% 
+  degree.distribution(.,cumulative = TRUE,mode ='in') %>% 
+  plot(1:(max(degree(giantGraph,mode='in'))+1),., ## since log doesn't take 0, add 1 to every degree
+       log='xy', type = 'l',
+       main = 'Log-Log Plot of In-degree',
+       ylab = 'CCDF',
+       xlab = 'In-degree')
+# Fit a power law to the degree distribution
+# The output of the power.law.fit() function tells us what the exponent of the power law is ($alpha)
+# and the log-likelihood of the parameters used to fit the power law distribution ($logLik)
+# Also, it performs a Kolmogov-Smirnov test to test whether the given degree distribution could have
+# been drawn from the fitted power law distribution.
+# The function thus gives us the test statistic ($KS.stat) and p-vaule ($KS.p) for that test
+in_power <- giantGraph %>% 
+  degree.distribution(., mode='in') %>%
+  power.law.fit(.)
+in_power
+
+# Examine the out-degree distribution
+giantGraph %>% degree.distribution(.,mode="out") %>% 
+  plot(., col = 'black', pch = 19, cex = 1.5,
+       main = 'Out-degree Distribution',
+       ylab = 'Density',
+       xlab = 'Out-degree')
+# Plot a log-log plot
+giantGraph %>% 
+  degree.distribution(.,cumulative = TRUE,mode ='out') %>% 
+  plot(1:(max(degree(giantGraph,mode='out'))+1), ## since log doesn't take 0, add 1 to every degree
+       ., log='xy', type = 'l',
+       main = 'Log-Log Plot of Out-degree',
+       ylab = 'CCDF',
+       xlab = 'Out-degree')
+# Fit a power law to the degree distribution
+out_power <- giantGraph %>% 
+  degree.distribution(., mode='out') %>%
+  power.law.fit(.)
+
+
+# Small-world Characteristics
+ntrials <- 1000 ## set a value for the repetition
+cl.rg <- numeric(ntrials) ## create an estimated value holder for clustering coefficient
+apl.rg <- numeric(ntrials) ## create an estimated value holder for average path length
+for (i in (1:ntrials)) {
+  g.rg <- rewire(giantGraph, keeping_degseq(niter = 100))
+  cl.rg[i] <- transitivity(g.rg, type = 'average')
+  apl.rg[i] <- average.path.length(g.rg)
+}
+
+# plot a histogram of simulated values for clustering coefficient + the observed value
+hist(cl.rg,
+     main = 'Histogram of Clustering Coefficient',
+     xlab = 'Clustering Coefficient')
+par(xpd = FALSE)
+# the line indicates the mean value of clustering coefficient for your network
+abline(v = giantGraph %>% transitivity(., type = 'average'), col = 'red', lty = 2)
+# this tests whether the observed value is statistically different from the simulated distribution
+t.test(cl.rg, mu=giantGraph %>% transitivity(., type = 'average'),
+       alternative = 'less') ##pick either 'less' or 'greater' based on your results
+
+# plot a histogram of simulated values for average path length + the observed value
+hist(apl.rg,
+     main = 'Histogram of Average Path Length',
+     xlab = 'Average Path Length')
+# the line indicates the mean value of average path length for your network
+abline(v = giantGraph %>% average.path.length(), col = 'red', lty = 2)
+# this tests whether the observed value is statistically different from the simulated distribution
+t.test(apl.rg, mu=giantGraph %>% average.path.length(.),
+       alternative = 'greater') ##pick either 'less' or 'greater' based on your results
