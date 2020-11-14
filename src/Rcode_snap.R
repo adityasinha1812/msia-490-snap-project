@@ -7,7 +7,7 @@ library(igraph)
 library(dplyr)
 library('intergraph')
 detach(package:igraph)
-sessionInfo() ## check other attached packages. If magrittr, vosonSML, & igraph are listed there, you're ready!
+sessionInfo() ## check other attached packages. 
 list.files()
 connectionsFromEdgesAll <- read.csv("../data/edges_all.csv")
 # View the first rows of the edgelist to make sure it imported correctly:
@@ -62,7 +62,6 @@ is.directed(connections)
 
 summary(connections)                              # summarize the Buy In From You network
 network.size(connections)                         # print out the network size
-betweenness(connections)                          # calculate betweenness for the network
 isolates(connections)  
 
 network.density(connections)
@@ -93,7 +92,6 @@ comp
 
 giantGraph <- connections_igraph %>% 
   induced.subgraph(., which(comp$membership == which.max(comp$csize)))
-V(giantGraph)$color <- cCodes # Have to give valid R color names
 vcount(giantGraph) ## the number of nodes/actors/users
 ecount(giantGraph) ## the number of edges
 
@@ -107,7 +105,6 @@ giantGraph %>%
        vertex.label = NA,
        vertex.label.cex = .5,
        vertex.label.color = 'black')
-
 
 #<<<<<<< Updated upstream
 sna_g <- igraph::get.adjacency(connections_igraph, sparse=FALSE) %>% network::as.network.matrix()
@@ -152,8 +149,9 @@ giantGraph %>%
        edge.arrow.size = .3,
        vertex.size = 4,
        vertex.color = adjustcolor(graph.coreness(.), alpha.f = .3),
-       vertex.label.cex = .5,
-       vertex.label.color = 'black',
+       vertex.label = NA,
+       #vertex.label.cex = .5,
+       #vertex.label.color = 'black',
        mark.groups = by(seq_along(graph.coreness(.)), graph.coreness(.), invisible),
        mark.shape = 1/4,
        mark.col = rainbow(length(unique(graph.coreness(.))),alpha = .1),
@@ -191,8 +189,9 @@ cluster %>% plot(.,giantGraph,
                  edge.arrow.size = .3,
                  vertex.size = 4,
                  vertex.color = adjustcolor(membership(.), alpha.f = .3),
-                 vertex.label.cex = .5,
-                 vertex.label.color = 'black',
+                 vertex.label = NA,
+                 #vertex.label.cex = .5,
+                 #vertex.label.color = 'black',
                  mark.groups = by(seq_along(membership(.)), membership(.), invisible),
                  mark.shape = 1/4,
                  mark.col = rainbow(length(.),alpha = .1),
