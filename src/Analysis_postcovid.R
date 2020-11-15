@@ -1,34 +1,58 @@
-if (!"igraph" %in% installed.packages()) install.packages("igraph") ## this package is a network analysis tool
-if (!"statnet" %in% install.packages()) install.packages("statnet") ## this package is another popular network analysis tool
-install.packages("intergraph")
+######################################################################################
+#
+# Initialization part 
+#
+######################################################################################
+
+# Required packages 
+# igraph = Create graphs for network analysis 
+# StatNet = Perform network statistics 
+# Intergraph = Convert between graph objs. Network -> igraph and vice-versa 
+if (!"igraph" %in% installed.packages()) install.packages("igraph")
+if (!"statnet" %in% install.packages()) install.packages("statnet")
+if (!"intergraph" %in% install.packages()) install.packages("intergraph") 
+
 
 library(statnet)
-library(igraph)
-library(dplyr)
-library('intergraph')
-detach(package:igraph)
-sessionInfo() ## check other attached packages. 
+library(dplyr)  # For data manipulation 
+library(intergraph)
+
+
+sessionInfo() # check other attached packages. 
 list.files()
-connectionsFromEdgesAll <- read.csv("../data/edges_all.csv")
+connectionsFromEdgesPre <- read.csv("../data/edges_all.csv")
+
 # View the first rows of the edgelist to make sure it imported correctly:
-head(connectionsFromEdgesAll)
+head(connectionsFromEdgesPre)
+
+
+
+######################################################################################
+#
+# Graph formation and visualization 
+#
+######################################################################################
+
 # Convert the edgelist to a network object in statnet format:
 # connections <- network(matrix(scan(file="edges_all.csv", skip=1), byrow=TRUE), matrix.type = "edgelist") 
-connections <- as.network.matrix(connectionsFromEdgesAll, matrix.type = "edgelist", directed = FALSE)
+connections <- as.network.matrix(connectionsFromEdgesPre, matrix.type = "edgelist", directed = FALSE)
 
 # Connections object in statnet format
-
 conn_mat <- as.matrix.network(connections)
 sum(conn_mat)
 connections
 
+# 'Omkar': 1, 'Aditya': 2, 'Amisha': 3, 'Anuradha': 4
+# For coloring the connections, grab all connections separately for the 4 group members 
 c1 <- connections[,1]
 c2 <- connections[,2]
 c3 <- connections[,3]
 c4 <- connections[,4]
 
 # Color codes for just tied tied to one, or if tied to  others
-cCodes <- rep(NA,1505)
+total_nodes = dim(conn_mat)[1]
+
+cCodes <- rep(NA, total_nodes)
 for (i in 1:length(cCodes)) {
   if ((c1[i] == 1) & (c2[i] == 0) & (c3[i] == 0) & (c4[i] == 0)) {
     cCodes[i] <- "red"
@@ -42,45 +66,65 @@ for (i in 1:length(cCodes)) {
   if ((c1[i] == 0) & (c2[i] == 0) & (c3[i] == 0) & (c4[i] == 1)) {
     cCodes[i] <- "green"
   }
-  if ((c1[i] + c2[i] + c3[i] + c4[i]) >1 ) {
+  if ((c1[i] + c2[i] + c3[i] + c4[i]) > 1 ) {
     cCodes[i] <- "coral"
   }
 }
 cCodes[1:4] <- "cyan"
 
 # Add attribute and check plot using statnet
+# Make sure igraph is not loaded in order for set.vertex.attribute to work 
 
+# Add different attributes to the graph object 
 connections
+detach(package:igraph)  
+# Color attribute 
 set.vertex.attribute(connections,"contact.color",cCodes)
 connections
 get.vertex.attribute(connections,"contact.color")
+
+
+# Adding the "names" attribute
+# Load the combined connections info file 
+combined_conn <- read.csv('../data/combined_data.csv')
+# Extract the ID and Full Name column from it 
+# Note that %>% is used for piping functions 
+id_to_names <- combined_conn %>% select(ID, Full.Name)
+# Delete duplicates 
+id_to_names = distinct(id_to_names, ID, .keep_all=TRUE)
+# Sort the ids 
+id_to_names <- id_to_names[order(id_to_names$ID),]
+# Pass the names as a vertex attribute 
+set.vertex.attribute(connections,"names", id_to_names$Full.Name)
+# Also store the ID as the attribute 
+set.vertex.attribute(connections,"ID", id_to_names$ID)
+
+
 par(mar = c(0, 0, 0, 0)) 
 plot(connections, vertex.col = "contact.color")
 
-# check if the network is directed or undirected
-is.directed(connections)
-
-summary(connections)                              # summarize the Buy In From You network
-network.size(connections)                         # print out the network size
-isolates(connections)  
-
-network.density(connections)
-
-save.image("snap_file.RData")
-load("snap_file.RData")
 
 
-library('igraph')
-
-par(mar = c(0, 0, 0, 0)) 
-
+# Visualize the giant component 
 connections_igraph <- asIgraph(connections)
 connections_igraph
+
+
+# Load igraph after finishing up with tasks related to intergraph 
+library('igraph')
+par(mar = c(0, 0, 0, 0))  # This is to set plotting parameters  
+
+cCodes
 V(connections_igraph)$color <- cCodes # Have to give valid R color names
 
+color_mat = V(connections_igraph)$color
+table(color_mat) # Get the color count 
+
+
+# Full pre-covid graph in a different layout 
 connections_igraph %>% 
   plot(.,
-       layout = layout_with_fr(.), ## Fruchterman-Reingold layout
+       layout = layout_with_kk(.), ## Fruchterman-Reingold layout
        edge.arrow.size = .4, ## arrow size
        vertex.size = 5, ## node size
        vertex.label = NA,
@@ -90,6 +134,7 @@ connections_igraph %>%
 comp <- components(connections_igraph)
 comp
 
+# Giant component plot 
 giantGraph <- connections_igraph %>% 
   induced.subgraph(., which(comp$membership == which.max(comp$csize)))
 vcount(giantGraph) ## the number of nodes/actors/users
@@ -106,69 +151,128 @@ giantGraph %>%
        vertex.label.cex = .5,
        vertex.label.color = 'black')
 
-#<<<<<<< Updated upstream
-sna_g <- igraph::get.adjacency(connections_igraph, sparse=FALSE) %>% network::as.network.matrix()
-detach('package:igraph')
-library(statnet)
-degree(sna_g, cmode = 'indegree')
-centralities <- data.frame('node_name' = as.character(network.vertex.names(sna_g)),
-                           'in_degree' = degree(sna_g, cmode = 'indegree'))
-centralities$out_degree <- degree(sna_g, cmode = 'outdegree')
-centralities$betweenness <- betweenness(sna_g)
-centralities$incloseness <- igraph::closeness(connections_igraph, mode = 'in')
-centralities$outcloseness <- igraph::closeness(connections_igraph, mode = 'out')
-centralities$eigen <- evcent(sna_g)
-centralities$netconstraint <- igraph::constraint(connections_igraph)
-centralities$authority <- igraph::authority_score(connections_igraph, scale = TRUE)$`vector`
-centralities$hub <- igraph::hub_score(connections_igraph, scale = TRUE)$`vector`
-View(centralities)
-#=======
-# Convert to igraph for plotting
-# (Need to have intergraph package installed and loaded)
-#>>>>>>> Stashed changes
+
+sna_g <- igraph::get.adjacency(giantGraph, sparse=FALSE) %>% network::as.network.matrix()
+names_attr <- vertex_attr(giantGraph, 'names')
+ids_attr <- vertex_attr(giantGraph, 'ID')
+
+
+# Save the giant-graph obj 
+save.image('PostCovid_image.RData')
+
 
 ######################################################################################
 #
-# Part IV: Global Network Proporties
+# Network Statistics - Centralities 
 #
 ######################################################################################
-# If you want to go back to igraph analysis, don't forget detaching 'sna' and 'network' first
-# before recalling 'igraph'
-#  go back to 'igraph'
+
+load('PostCovid_image.RData')
+
+detach(package:igraph)  
+is.directed(connections)
+
+summary(connections)                             
+network.size(connections)                        
+length(isolates(connections))
+network.density(connections)
+
+
+
+# Calculate different centrality measures 
+library(statnet)
+
+# Compute centralities based on 'network' package
+# Calculate in-degree centrality
+# Store the information
+# Calculate degree centrality 
+# gmode = graph is used in case of undirected graphs 
+centralities <- data.frame( 'node_id' = ids_attr, 'node_name' = names_attr, 
+                            'degree' = degree(sna_g, gmode='graph', cmode = 'freeman'))
+
+# Calculate betweenness centrality and store it in the data.frame called 'centralities'
+centralities$betweenness <- betweenness(sna_g)
+
+# Calculate closeness centrality and store it in the data.frame called 'centralities'
+centralities$closeness <- igraph::closeness(giantGraph, mode = 'all')
+
+# Calculate eigenvector centrality and store it in the data.frame called 'centralities'
+centralities$eigen <- evcent(sna_g)
+
+# Calculate Burt's network constraint and store it in the data.frame called 'centralities'
+# using 'igraph' because 'sna' doesn't have the function
+centralities$netconstraint <- igraph::constraint(giantGraph)
+
+# Calculate authority and store it in the data.frame called 'centralities'
+# using 'igraph' because 'sna' doesn't have the function
+# 'igraph::' allows calling for any igraph function without loading the package
+centralities$authority <- igraph::authority_score(giantGraph, scale = TRUE)$`vector`
+
+# Calculate hub and store it in the data.frame called 'centralities'
+# using 'igraph' because 'sna' doesn't have the function
+centralities$hub <- igraph::hub_score(giantGraph, scale = TRUE)$`vector`
+
+View(centralities)
+
+######################################################################################
+#
+# Network Statistics - Global Properties  
+#
+######################################################################################
+
+### K-Core Decomposition ### 
+
 detach('package:statnet', unload = TRUE)
 library(igraph)
 
 kcore <- giantGraph %>% graph.coreness(.) ## calculate k-cores
 kcore ## show the results of k-core decomposition
 
-## Plot a graph colored by the k-core decompotion results
+# Count the number of nodes in each group 
+max_k <- max(kcore)
+k_counts = rep(0, max_k)
+for (i in max_k:1){
+  
+  k_counts[i] = length(which(kcore == i))
+  
+}
+k_counts
+
+## Plot a graph colored by the k-core decomposition results
 giantGraph %>% 
   plot(.,
-       layout = layout_with_gem(.),
-       # layout = layout_with_sugiyama(.),
+       layout = layout_with_lgl(.),
        edge.arrow.size = .3,
        vertex.size = 4,
-       vertex.color = adjustcolor(graph.coreness(.), alpha.f = .3),
-       vertex.label = NA,
-       #vertex.label.cex = .5,
-       #vertex.label.color = 'black',
-       mark.groups = by(seq_along(graph.coreness(.)), graph.coreness(.), invisible),
+       vertex.color = adjustcolor(kcore, alpha.f = .3),
+       vertex.label.cex = .5,
+       vertex.label.color = 'black',
+       mark.groups = by(seq_along(kcore), kcore, invisible),
        mark.shape = 1/4,
-       mark.col = rainbow(length(unique(graph.coreness(.))),alpha = .1),
+       mark.col = rainbow(length(unique(kcore)),alpha = .1),
        mark.border = NA
   )
 
-# Plot the number of clusters in the graph and their size
-# there are also other algorithms for this you may want to explore
-# below is using Newman-Girvan Algorithm (2003)
-# if communities do not make sense to you, replace with your choice
-# e.g., cluster_infomap, cluster_walktrap etc.
-cluster <- giantGraph %>% cluster_edge_betweenness() 
-## you'll see red warning messages since the edge betweennness algorithm is not designed for a directed graph
-## but you'll be able to see the results anyway.
-## if you want to use a more appropriate algorithm for a directed graph, try:
+
+### Cluster analysis using Newman Girman, 
+# VERY SLOW 
+# cluster <- giantGraph %>% cluster_edge_betweenness(directed=FALSE) 
+# Save the cluster file as its too time consuming to calculate over and over again 
+# saveRDS(cluster, 'cluster_ng_post.rds')
+
+# Load the cluster
+cluster = readRDS('cluster_ng_post.rds')
+
+
+# Using walktrap
 # cluster <- giantGraph %>% cluster_walktrap()
-cluster
+
+# Using fast greedy
+# Performs almost as well as Newman Girvan, and is much faster
+# cluster <- giantGraph %>% cluster_fast_greedy() 
+
+cluster 
+
 
 # modularity measure
 modularity(cluster)
@@ -189,31 +293,49 @@ cluster %>% plot(.,giantGraph,
                  edge.arrow.size = .3,
                  vertex.size = 4,
                  vertex.color = adjustcolor(membership(.), alpha.f = .3),
-                 vertex.label = NA,
-                 #vertex.label.cex = .5,
-                 #vertex.label.color = 'black',
+                 vertex.label.cex = .5,
+                 vertex.label.color = 'black',
                  mark.groups = by(seq_along(membership(.)), membership(.), invisible),
                  mark.shape = 1/4,
                  mark.col = rainbow(length(.),alpha = .1),
-                 mark.border = NA
+                 # mark.border = NA
 )
 
 
-# Examine the in-degree distribution
-giantGraph %>% degree.distribution(.,mode="in") %>% 
+# Get the members of the 5th community 
+members_arr = cluster$membership
+total_members = length(members_arr)
+members_names = rep(0, sizes(cluster)[5]) 
+counter = 1
+for (i in 1:total_members){
+  if (members_arr[i] == 5)
+  {
+    members_names[counter] <- names_attr[i]
+    counter <- counter +  1 
+  }
+}
+
+members_names
+
+
+### Degree distribution ### 
+
+giantGraph %>% degree.distribution(.,) %>% 
   plot(., col = 'black', pch = 19, cex = 1.5,
-       main = 'In-degree Distribution',
+       main = 'Degree Distribution',
        ylab = 'Density',
-       xlab = 'In-degree')
+       xlab = 'Degree')
+
 # CCDF - Complementary Cumulative Distribution Function
-# Plot a log-log plot of in-degree distribution
+# Plot a log-log plot of Degree distribution
 giantGraph %>% 
-  degree.distribution(.,cumulative = TRUE,mode ='in') %>% 
-  plot(1:(max(degree(giantGraph,mode='in'))+1),., ## since log doesn't take 0, add 1 to every degree
+  degree.distribution(.,cumulative = TRUE ) %>% 
+  plot(1:(max(degree(giantGraph))+1),., ## since log doesn't take 0, add 1 to every degree
        log='xy', type = 'l',
-       main = 'Log-Log Plot of In-degree',
+       main = 'Log-Log Plot of Degree',
        ylab = 'CCDF',
-       xlab = 'In-degree')
+       xlab = 'Degree')
+
 # Fit a power law to the degree distribution
 # The output of the power.law.fit() function tells us what the exponent of the power law is ($alpha)
 # and the log-likelihood of the parameters used to fit the power law distribution ($logLik)
@@ -221,49 +343,38 @@ giantGraph %>%
 # been drawn from the fitted power law distribution.
 # The function thus gives us the test statistic ($KS.stat) and p-vaule ($KS.p) for that test
 in_power <- giantGraph %>% 
-  degree.distribution(., mode='in') %>%
+  degree.distribution(.,) %>%
   power.law.fit(.)
 in_power
 
-# Examine the out-degree distribution
-giantGraph %>% degree.distribution(.,mode="out") %>% 
-  plot(., col = 'black', pch = 19, cex = 1.5,
-       main = 'Out-degree Distribution',
-       ylab = 'Density',
-       xlab = 'Out-degree')
-# Plot a log-log plot
-giantGraph %>% 
-  degree.distribution(.,cumulative = TRUE,mode ='out') %>% 
-  plot(1:(max(degree(giantGraph,mode='out'))+1), ## since log doesn't take 0, add 1 to every degree
-       ., log='xy', type = 'l',
-       main = 'Log-Log Plot of Out-degree',
-       ylab = 'CCDF',
-       xlab = 'Out-degree')
-# Fit a power law to the degree distribution
-out_power <- giantGraph %>% 
-  degree.distribution(., mode='out') %>%
-  power.law.fit(.)
 
 
-# Small-world Characteristics
+### Small-world characteristics 
+
 ntrials <- 1000 ## set a value for the repetition
 cl.rg <- numeric(ntrials) ## create an estimated value holder for clustering coefficient
 apl.rg <- numeric(ntrials) ## create an estimated value holder for average path length
 for (i in (1:ntrials)) {
   g.rg <- rewire(giantGraph, keeping_degseq(niter = 100))
-  cl.rg[i] <- transitivity(g.rg, type = 'average')
+  cl.rg[i] <- transitivity(g.rg, type = 'global')
   apl.rg[i] <- average.path.length(g.rg)
 }
 
 # plot a histogram of simulated values for clustering coefficient + the observed value
+# Calculate the x-lim correctly to make sure the red line is also shown 
+x_low = min(cl.rg)
+x_high = max(cl.rg)
+epsilon = 0.005
 hist(cl.rg,
      main = 'Histogram of Clustering Coefficient',
-     xlab = 'Clustering Coefficient')
+     xlab = 'Clustering Coefficient',
+     xlim = range(x_low, x_high+epsilon)
+)
 par(xpd = FALSE)
 # the line indicates the mean value of clustering coefficient for your network
-abline(v = giantGraph %>% transitivity(., type = 'average'), col = 'red', lty = 2)
+abline(v = giantGraph %>% transitivity(., type = 'global'), col = 'red', lty = 2)
 # this tests whether the observed value is statistically different from the simulated distribution
-t.test(cl.rg, mu=giantGraph %>% transitivity(., type = 'average'),
+t.test(cl.rg, mu=giantGraph %>% transitivity(., type = 'global'),
        alternative = 'less') ##pick either 'less' or 'greater' based on your results
 
 # plot a histogram of simulated values for average path length + the observed value
@@ -274,4 +385,7 @@ hist(apl.rg,
 abline(v = giantGraph %>% average.path.length(), col = 'red', lty = 2)
 # this tests whether the observed value is statistically different from the simulated distribution
 t.test(apl.rg, mu=giantGraph %>% average.path.length(.),
-       alternative = 'greater') ##pick either 'less' or 'greater' based on your results
+       alternative = 'less') ##pick either 'less' or 'greater' based on your results
+
+
+
