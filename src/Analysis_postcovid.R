@@ -77,7 +77,7 @@ cCodes[1:4] <- "cyan"
 
 # Add different attributes to the graph object 
 connections
-detach(package:igraph)  
+#detach(package:igraph)  if igraph library is loaded
 # Color attribute 
 set.vertex.attribute(connections,"contact.color",cCodes)
 connections
@@ -105,7 +105,7 @@ plot(connections, vertex.col = "contact.color")
 
 
 
-# Visualize the giant component 
+# Converting statnet ogject into igraph 
 connections_igraph <- asIgraph(connections)
 connections_igraph
 
@@ -124,7 +124,7 @@ table(color_mat) # Get the color count
 # Full pre-covid graph in a different layout 
 connections_igraph %>% 
   plot(.,
-       layout = layout_with_kk(.), ## Fruchterman-Reingold layout
+       layout = layout_with_fr(.), ## Fruchterman-Reingold layout
        edge.arrow.size = .4, ## arrow size
        vertex.size = 5, ## node size
        vertex.label = NA,
@@ -159,7 +159,6 @@ ids_attr <- vertex_attr(giantGraph, 'ID')
 
 # Save the giant-graph obj 
 save.image('PostCovid_image.RData')
-
 
 ######################################################################################
 #

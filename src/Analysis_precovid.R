@@ -105,7 +105,7 @@ plot(connections_pre, vertex.col = "contact.color")
 
 
 
-# Visualize the giant component 
+# Converting statnet network object into igraph
 connections_igraph_pre <- asIgraph(connections_pre)
 connections_igraph_pre
 
@@ -124,7 +124,7 @@ table(color_mat) # Get the color count
 # Full pre-covid graph in a different layout 
 connections_igraph_pre %>% 
   plot(.,
-       layout = layout_with_kk(.), ## Fruchterman-Reingold layout
+       layout = layout_with_fr(.), ## Fruchterman-Reingold layout
        edge.arrow.size = .4, ## arrow size
        vertex.size = 5, ## node size
        vertex.label = NA,
