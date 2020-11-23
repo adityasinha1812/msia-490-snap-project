@@ -3,6 +3,9 @@ from constants import DATA_PATH
 import pandas as pd
 import os
 from datetime import date, datetime
+import numpy as np
+from fuzzywuzzy import fuzz
+
 
 
 def combine_data():
@@ -149,6 +152,84 @@ def save_edges(edges, filename):
     df_edges.to_csv(DATA_PATH / filename, index=False)
 
 
+def generate_adjacency_matrix():
+    df_pre = pd.read_csv(DATA_PATH / 'edges_pre.csv')
+    df_post = pd.read_csv(DATA_PATH / 'edges_all.csv')
+
+    adj_mat_pre = np.zeros((1505, 1505), dtype=np.int32)
+    adj_mat_post = np.zeros((1505, 1505), dtype=np.int32)
+
+    # Generate the matrix for pre-covid data
+    for index, row in df_pre.iterrows():
+        i, j = row['ID1']-1, row['ID2']-1
+        adj_mat_pre[i, j] = 1
+        adj_mat_pre[j, i] = 1
+
+    # Generate for post-covid data
+    for index, row in df_post.iterrows():
+        i, j = row['ID1']-1, row['ID2']-1
+        adj_mat_post[i, j] = 1
+        adj_mat_post[j, i] = 1
+
+    # Save to disk
+    np.savetxt(DATA_PATH / 'adj_pre.dat', X=adj_mat_pre, fmt='%i')
+    np.savetxt(DATA_PATH / 'adj_post.dat', X=adj_mat_post, fmt='%i')
+
+
+def generate_effects_companies():
+    df = pd.read_csv(DATA_PATH / 'combined_data.csv')
+    companies = df.set_index('ID')['Company'].to_dict()
+    NUM_NODES = 1505
+    nu_count = 0
+    nu_feature = np.zeros(NUM_NODES+1, dtype=np.int32)  # 1 = if belongs to Northwestern,
+    # 0 otherwise
+
+    desired = "Northwestern"
+
+    for k, v in companies.items():
+        if type(v) == str:
+            ratio = fuzz.partial_ratio(desired, v)
+            if ratio > 90:
+                nu_feature[k] = 1
+
+    # Write feature to disk
+    with open(DATA_PATH / 'nu.dat', 'w') as f:
+        for index, val in enumerate(nu_feature):
+            if index > 0:
+                f.write("{} {}\n".format(val, val))
+
+    f.close()
+
+
+def generate_effects_positions(position):
+    df = pd.read_csv(DATA_PATH / 'combined_data.csv')
+    positions = df.set_index('ID')['Position'].to_dict()
+    NUM_NODES = 1505
+    pos_feature = np.zeros(NUM_NODES+1, dtype=np.int32)  # 1 = if = position else 0
+
+    for k, v in positions.items():
+        if type(v) == str:
+            ratio = fuzz.partial_ratio(position, v)
+            if ratio > 90:
+                pos_feature[k] = 1
+
+    # Write feature to disk
+    file_name = position + ".dat"
+    with open(DATA_PATH / file_name, 'w') as f:
+        for index, val in enumerate(pos_feature):
+            if index > 0:
+                f.write("{} {}\n".format(val, val))
+
+    f.close()
+
+
 if __name__ == '__main__':
-    combine_data()
-    generate_edges(filter_date='2020-3-31')
+    # combine_data()
+    # generate_edges(filter_date='2020-3-31')
+
+    # generate_adjacency_matrix()
+    # generate_effects_companies()
+    # generate_effects_positions(position="Engineer")
+    # generate_effects_positions(position="Research")
+    generate_effects_positions(position="Manager")
+    generate_effects_positions(position="Director")

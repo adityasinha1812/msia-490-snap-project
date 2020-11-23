@@ -1,0 +1,686 @@
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 22/11/2020 22:31:54
+New results follow.
+-----------------------------------
+
+RSiena version 1.2-23 (12 Jan 20)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 768861.
+Effects object used: myeff 
+Model Type:
+ 
+Behavioral Model Type:
+ 
+Estimation method: unconditional moment estimation.
+
+Time duration for simulations is 1.0.
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.2000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  1. rate:  basic rate parameter sNet                       2.4710
+  2. eval:  degree (density)                                0.0000
+  3. eval:  nuNet alter                                     0.0000
+  4. eval:  nuNet ego                                       0.0000
+  5. eval:  same nuNet                                      0.0000
+  6. rate:  rate nuNet period 1                             0.1000
+
+
+Observed values of target statistics are
+  1. Amount of network change                                          1858.0000
+  2. Number of edges                                                   7298.0000
+  3. Sum of degrees x nuNet                                            -138.8930
+  4. Sum of degrees x nuNet                                            -138.8930
+  5. same nuNet                                                        13472.0000
+  6. Amount of behavioral change                                          0.0000
+
+ 6 parameters, 6 statistics
+
+Total computation time 296.22 seconds.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 22/11/2020 22:41:46
+New results follow.
+-----------------------------------
+
+RSiena version 1.2-23 (12 Jan 20)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 593902.
+Effects object used: myeff 
+Model Type:
+ 
+Behavioral Model Type:
+ 
+Estimation method: unconditional moment estimation.
+
+Time duration for simulations is 1.0.
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.4000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  1. rate:  basic rate parameter sNet                       2.4710
+  2. eval:  degree (density)                                0.0000
+  3. eval:  nuNet alter                                     0.0000
+  4. eval:  nuNet ego                                       0.0000
+  5. eval:  same nuNet                                      0.0000
+  6. rate:  rate nuNet period 1                             0.1000
+
+
+Observed values of target statistics are
+  1. Amount of network change                                          1858.0000
+  2. Number of edges                                                   7298.0000
+  3. Sum of degrees x nuNet                                            -138.8930
+  4. Sum of degrees x nuNet                                            -138.8930
+  5. same nuNet                                                        13472.0000
+  6. Amount of behavioral change                                          0.0000
+
+ 6 parameters, 6 statistics
+
+Total computation time 313.51 seconds.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 22/11/2020 22:47:34
+New results follow.
+-----------------------------------
+
+RSiena version 1.2-23 (12 Jan 20)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 341050.
+Effects object used: myeff 
+Model Type:
+ 
+Behavioral Model Type:
+ 
+Estimation method: unconditional moment estimation.
+
+Time duration for simulations is 1.0.
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.4000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  1. rate:  basic rate parameter sNet                       2.4710
+  2. eval:  degree (density)                                0.0000
+  3. eval:  nuNet alter                                     0.0000
+  4. eval:  nuNet ego                                       0.0000
+  5. eval:  same nuNet                                      0.0000
+  6. rate:  rate nuNet period 1                             0.1000
+
+
+Observed values of target statistics are
+  1. Amount of network change                                          1858.0000
+  2. Number of edges                                                   7298.0000
+  3. Sum of degrees x nuNet                                            -138.8930
+  4. Sum of degrees x nuNet                                            -138.8930
+  5. same nuNet                                                        13472.0000
+  6. Amount of behavioral change                                          0.0000
+
+ 6 parameters, 6 statistics
+
+Estimation problem with parameter(s) 6 this/these parameter(s) is/are fixed.
+The user asked for early end of phase 2.
+Estimation of derivatives by the LR method (type 1).
+
+The user asked for an early stop of the  algorithm during phase 3.
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 1925 iterations.
+Parameter estimates based on 1420 iterations,
+convergence diagnostics, covariance and derivative matrices based on 505 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+Overall maximum t-ratio for convergence not computable.
+  1.  34.3050  62.0924   0.5525                      
+  2.  17.1525  31.0462   0.5525                      
+  3.  -1.1750  11.9919  -0.0980                      
+  4.  -1.1750  11.9919  -0.0980                      
+  5. -19.3663  55.7515  -0.3474                      
+  6.   0.0000   0.0000   0.0000     (fixed parameter)
+
+Good convergence is indicated by the t-ratios of non-fixed parameters being close to zero.
+
+Overall maximum convergence ratio =  NA .
+One or more of the t-statistics are rather large.
+Convergence of the algorithm is doubtful.
+*** Warning: Covariance matrix not positive definite *** 
+***            Standard errors not reliable           *** 
+The approximate linear combination that has variance 0 is
+-1 * beta[3] + 1 * beta[4]
+Do not use any reported standard errors.
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 1925 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+Network Dynamics
+ 1. rate:  basic rate parameter sNet                            NANA
+ 2. eval:  degree (density)                                     NANA
+ 3. eval:  nuNet alter                                          NANA
+ 4. eval:  nuNet ego                                            NANA
+ 5. eval:  same nuNet                                           NANA
+
+Behavior Dynamics
+ 6. rate:  rate nuNet period 1                                     0.1000  (  fixed  )
+
+
+@3
+Covariance matrices
+                   
+There is a linear dependency between the parameter estimates
+ therefore the covariance matrix should not be used.
+
+Total computation time 1284.83 seconds.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 22/11/2020 23:18:00
+New results follow.
+-----------------------------------
+
+RSiena version 1.2-23 (12 Jan 20)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 780789.
+Effects object used: myeff 
+Model Type:
+ 
+Behavioral Model Type:
+ 
+Estimation method: unconditional moment estimation.
+
+Time duration for simulations is 1.0.
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.4000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  1. rate:  basic rate parameter sNet                       2.4710
+  2. eval:  degree (density)                                0.0000
+  3. eval:  engNet alter                                    0.0000
+  4. eval:  engNet ego                                      0.0000
+  5. eval:  same engNet                                     0.0000
+  6. rate:  rate engNet period 1                            0.1000
+
+
+Observed values of target statistics are
+  1. Amount of network change                                          1858.0000
+  2. Number of edges                                                   7298.0000
+  3. Sum of degrees x engNet                                            126.3900
+  4. Sum of degrees x engNet                                            126.3900
+  5. same engNet                                                       10098.0000
+  6. Amount of behavioral change                                          0.0000
+
+ 6 parameters, 6 statistics
+
+Estimation problem with parameter(s) 4 6 this/these parameter(s) is/are fixed.
+Estimation of derivatives by the LR method (type 1).
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 2726 iterations.
+Parameter estimates based on 1726 iterations,
+convergence diagnostics, covariance and derivative matrices based on 1000 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+Overall maximum t-ratio for convergence not computable.
+  1.   5.0200  59.5386   0.0843                      
+  2.   2.5100  29.7693   0.0843                      
+  3.   3.8630  17.9743   0.2149                      
+  4.   3.8630  17.9743   0.2149     (fixed parameter)
+  5. -11.9260  50.8512  -0.2345                      
+  6.   0.0000   0.0000   0.0000     (fixed parameter)
+
+Good convergence is indicated by the t-ratios of non-fixed parameters being close to zero.
+
+Overall maximum convergence ratio =  NA .
+*** Warning: Covariance matrix not positive definite *** 
+***            Standard errors not reliable           *** 
+The approximate linear combination that has variance 0 is
+-0.5 * beta[1] + 1 * beta[2]
+Do not use any reported standard errors.
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 2726 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+Network Dynamics
+ 1. rate:  basic rate parameter sNet                            NANA
+ 2. eval:  degree (density)                                     NANA
+ 3. eval:  engNet alter                                         NANA
+ 4. eval:  engNet ego                                              0.0000  (  fixed  )
+ 5. eval:  same engNet                                          NANA
+
+Behavior Dynamics
+ 6. rate:  rate engNet period 1                                    0.1000  (  fixed  )
+
+
+@3
+Covariance matrices
+                   
+There is a linear dependency between the parameter estimates
+ therefore the covariance matrix should not be used.
+
+Total computation time 1785.92 seconds.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 22/11/2020 23:51:44
+New results follow.
+-----------------------------------
+
+RSiena version 1.2-23 (12 Jan 20)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 299026.
+Effects object used: myeff 
+Model Type:
+ 
+Behavioral Model Type:
+ 
+Estimation method: unconditional moment estimation.
+
+Time duration for simulations is 1.0.
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.4000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  1. rate:  basic rate parameter sNet                       2.4710
+  2. eval:  degree (density)                                0.0000
+  3. eval:  mNet alter                                      0.0000
+  4. eval:  mNet ego                                        0.0000
+  5. eval:  same mNet                                       0.0000
+  6. rate:  rate mNet period 1                              0.1000
+
+
+Observed values of target statistics are
+  1. Amount of network change                                          1858.0000
+  2. Number of edges                                                   7298.0000
+  3. Sum of degrees x mNet                                              746.4658
+  4. Sum of degrees x mNet                                              746.4658
+  5. same mNet                                                         13450.0000
+  6. Amount of behavioral change                                          0.0000
+
+ 6 parameters, 6 statistics
+
+Estimation problem with parameter(s) 6 this/these parameter(s) is/are fixed.
+The user asked for early end of phase 2.
+Estimation of derivatives by the LR method (type 1).
+
+The user asked for an early stop of the  algorithm during phase 3.
+This implies that diagnostic checks, covariance matrices and t-values 
+are less  reliable, because they  are now based on only 101 phase-3 iterations.
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 763 iterations.
+Parameter estimates based on 662 iterations,
+convergence diagnostics, covariance and derivative matrices based on 101 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+Overall maximum t-ratio for convergence not computable.
+  1. 1012.8317  73.9774  13.6911                      
+  2.  506.4158  36.9887  13.6911                      
+  3.  -44.5458  13.4886  -3.3025                      
+  4.  -44.5458  13.4886  -3.3025                      
+  5.  739.2277  64.3571  11.4863                      
+  6.    0.0000   0.0000   0.0000     (fixed parameter)
+
+Good convergence is indicated by the t-ratios of non-fixed parameters being close to zero.
+
+Overall maximum convergence ratio =  NA .
+One or more of the t-statistics are rather large.
+Convergence of the algorithm is doubtful.
+*** Warning: Covariance matrix not positive definite *** 
+***            Standard errors not reliable           *** 
+The approximate linear combination that has variance 0 is
+-1 * beta[3] + 1 * beta[4]
+Do not use any reported standard errors.
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 763 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+Network Dynamics
+ 1. rate:  basic rate parameter sNet                            NANA
+ 2. eval:  degree (density)                                     NANA
+ 3. eval:  mNet alter                                           NANA
+ 4. eval:  mNet ego                                             NANA
+ 5. eval:  same mNet                                            NANA
+
+Behavior Dynamics
+ 6. rate:  rate mNet period 1                                      0.1000  (  fixed  )
+
+
+@3
+Covariance matrices
+                   
+There is a linear dependency between the parameter estimates
+ therefore the covariance matrix should not be used.
+
+Total computation time 571.65 seconds.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 23/11/2020 00:04:17
+New results follow.
+-----------------------------------
+
+RSiena version 1.2-23 (12 Jan 20)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 862999.
+Effects object used: myeff 
+Model Type:
+ 
+Behavioral Model Type:
+ 
+Estimation method: unconditional moment estimation.
+
+Time duration for simulations is 1.0.
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.4000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  1. rate:  basic rate parameter sNet                       2.4710
+  2. eval:  degree (density)                                0.0000
+  3. eval:  rNet alter                                      0.0000
+  4. eval:  rNet ego                                        0.0000
+  5. eval:  same rNet                                       0.0000
+  6. rate:  rate rNet period 1                              0.1000
+
+
+Observed values of target statistics are
+  1. Amount of network change                                          1858.0000
+  2. Number of edges                                                   7298.0000
+  3. Sum of degrees x rNet                                             -995.0213
+  4. Sum of degrees x rNet                                             -995.0213
+  5. same rNet                                                         11526.0000
+  6. Amount of behavioral change                                          0.0000
+
+ 6 parameters, 6 statistics
+
+Estimation problem with parameter(s) 6 this/these parameter(s) is/are fixed.
+The user asked for early end of phase 2.
+Estimation of derivatives by the LR method (type 1).
+
+The user asked for an early stop of the  algorithm during phase 3.
+This implies that diagnostic checks, covariance matrices and t-values 
+are less  reliable, because they  are now based on only 121 phase-3 iterations.
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 1355 iterations.
+Parameter estimates based on 1234 iterations,
+convergence diagnostics, covariance and derivative matrices based on 121 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+Overall maximum t-ratio for convergence not computable.
+  1.  20.6116  49.7734   0.4141                      
+  2.  10.3058  24.8867   0.4141                      
+  3.  -6.4052  13.2525  -0.4833                      
+  4.  -6.4052  13.2525  -0.4833                      
+  5.  -5.6033  46.3117  -0.1210                      
+  6.   0.0000   0.0000   0.0000     (fixed parameter)
+
+Good convergence is indicated by the t-ratios of non-fixed parameters being close to zero.
+
+Overall maximum convergence ratio =  NA .
+One or more of the t-statistics are rather large.
+*** Warning: Covariance matrix not positive definite *** 
+***            Standard errors not reliable           *** 
+The approximate linear combination that has variance 0 is
+-1 * beta[3] + 1 * beta[4]
+Do not use any reported standard errors.
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 1355 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+Network Dynamics
+ 1. rate:  basic rate parameter sNet                            NANA
+ 2. eval:  degree (density)                                     NANA
+ 3. eval:  rNet alter                                           NANA
+ 4. eval:  rNet ego                                             NANA
+ 5. eval:  same rNet                                            NANA
+
+Behavior Dynamics
+ 6. rate:  rate rNet period 1                                      0.1000  (  fixed  )
+
+
+@3
+Covariance matrices
+                   
+There is a linear dependency between the parameter estimates
+ therefore the covariance matrix should not be used.
+
+Total computation time 1040.67 seconds.
+
+
+-----------------------------------
+New Analysis started.
+Date and time: 23/11/2020 00:24:13
+New results follow.
+-----------------------------------
+
+RSiena version 1.2-23 (12 Jan 20)
+
+
+@1
+Estimation by stochastic approximation algorithm.
+=================================================
+
+Random initialization of random number stream.
+Current random number seed is 520798.
+Effects object used: myeff 
+Model Type:
+ 
+Behavioral Model Type:
+ 
+Estimation method: unconditional moment estimation.
+
+Time duration for simulations is 1.0.
+Standard errors are estimated with the likelihood ratio method.
+Dolby method (regression on scores) is used.
+Initial value of gain parameter is  0.4000000.
+Reduction factor for gain parameter is  0.5000000.
+Number of subphases in Phase 2 is 4.
+
+Initial parameter values are 
+  1. rate:  basic rate parameter sNet                       2.4710
+  2. eval:  degree (density)                                0.0000
+  3. eval:  dNet alter                                      0.0000
+  4. eval:  dNet ego                                        0.0000
+  5. eval:  same dNet                                       0.0000
+  6. rate:  rate dNet period 1                              0.1000
+
+
+Observed values of target statistics are
+  1. Amount of network change                                          1858.0000
+  2. Number of edges                                                   7298.0000
+  3. Sum of degrees x dNet                                              330.5203
+  4. Sum of degrees x dNet                                              330.5203
+  5. same dNet                                                         14326.0000
+  6. Amount of behavioral change                                          0.0000
+
+ 6 parameters, 6 statistics
+
+Estimation problem with parameter(s) 6 this/these parameter(s) is/are fixed.
+The user asked for early end of phase 2.
+Estimation of derivatives by the LR method (type 1).
+
+The user asked for an early stop of the  algorithm during phase 3.
+This implies that diagnostic checks, covariance matrices and t-values 
+are less  reliable, because they  are now based on only 109 phase-3 iterations.
+
+
+@2
+End of stochastic approximation algorithm, phase 3.
+---------------------------------------------------
+
+Total of 1369 iterations.
+Parameter estimates based on 1260 iterations,
+convergence diagnostics, covariance and derivative matrices based on 109 iterations.
+
+Information for convergence diagnosis.
+Averages, standard deviations, and t-ratios for deviations from targets:
+Overall maximum t-ratio for convergence not computable.
+  1.  12.3303  61.4296   0.2007                      
+  2.   6.1651  30.7148   0.2007                      
+  3.  -5.8728   5.6596  -1.0377                      
+  4.  -5.8728   5.6596  -1.0377                      
+  5.  -0.2018  59.3458  -0.0034                      
+  6.   0.0000   0.0000   0.0000     (fixed parameter)
+
+Good convergence is indicated by the t-ratios of non-fixed parameters being close to zero.
+
+Overall maximum convergence ratio =  NA .
+One or more of the t-statistics are rather large.
+Convergence of the algorithm is doubtful.
+*** Warning: Covariance matrix not positive definite *** 
+***            Standard errors not reliable           *** 
+The approximate linear combination that has variance 0 is
+-1 * beta[1] + 0.92 * beta[2] + -0.58 * beta[3] + -0.58 * beta[4] + 0.58 * beta[5]
+Do not use any reported standard errors.
+
+
+
+@2
+Estimation Results.
+-------------------
+
+Regular end of estimation algorithm.
+Total of 1369 iteration steps.
+
+
+@3
+Estimates and standard errors
+                             
+Network Dynamics
+ 1. rate:  basic rate parameter sNet                            NANA
+ 2. eval:  degree (density)                                     NANA
+ 3. eval:  dNet alter                                           NANA
+ 4. eval:  dNet ego                                             NANA
+ 5. eval:  same dNet                                            NANA
+
+Behavior Dynamics
+ 6. rate:  rate dNet period 1                                      0.1000  (  fixed  )
+
+
+@3
+Covariance matrices
+                   
+There is a linear dependency between the parameter estimates
+ therefore the covariance matrix should not be used.
+
+Total computation time 1034.08 seconds.

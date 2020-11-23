@@ -237,6 +237,10 @@ for (i in max_k:1){
 }
 k_counts
 
+## Plot Bar plot of the k-count distribution 
+barplot(k_counts, names.arg=seq(1, max_k, 1), xlab="K Count", ylab="Frequency")
+
+
 ## Plot a graph colored by the k-core decomposition results
 giantGraph %>% 
   plot(.,
