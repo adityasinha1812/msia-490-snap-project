@@ -223,6 +223,55 @@ def generate_effects_positions(position):
     f.close()
 
 
+def generate_base_node_attr():
+    df_pre = pd.read_csv(DATA_PATH / 'edges_pre.csv')
+    df_post = pd.read_csv(DATA_PATH / 'edges_all.csv')
+    NUM_NODES = 1505
+    adj_mat_pre = np.zeros((NUM_NODES+1, NUM_NODES+1), dtype=np.int32)
+    adj_mat_post = np.zeros((NUM_NODES+1, NUM_NODES+1), dtype=np.int32)
+
+    # Generate the matrix for pre-covid data
+    for index, row in df_pre.iterrows():
+        i, j = row['ID1'], row['ID2']
+        adj_mat_pre[i, j] = 1
+        adj_mat_pre[j, i] = 1
+
+    # Generate for post-covid data
+    for index, row in df_post.iterrows():
+        i, j = row['ID1'], row['ID2']
+        adj_mat_post[i, j] = 1
+        adj_mat_post[j, i] = 1
+
+    # Now, label nodes based on which base nodes they are connected to
+    # 'Omkar': 1, 'Aditya': 2, 'Amisha': 3, 'Anuradha': 4, Mutual: 5, Base node itself: 0
+    base_nodes = [1, 2, 3, 4]
+    labels_pre = np.zeros(NUM_NODES+1, dtype=np.int32)
+    labels_post = np.zeros(NUM_NODES+1, dtype=np.int32)
+
+    for i in range(NUM_NODES+1):
+        for bn in base_nodes:
+            if adj_mat_pre[bn, i] == 1:
+                labels_pre[i] = bn if labels_pre[i] == 0 else 5
+
+            if adj_mat_post[bn, i] == 1:
+                labels_post[i] = bn if labels_post[i] == 0 else 5
+
+    print(labels_pre, labels_post)
+
+    mutual_in_pre = np.where(labels_pre == 5)[0]
+    mutual_in_post = np.where(labels_post == 5)[0]
+
+    print("Mutual connections went up from {} to {}".format(len(mutual_in_pre), len(mutual_in_post)))
+    # Write feature to disk
+    file_name = "base_node_feature.dat"
+    with open(DATA_PATH / file_name, 'w') as f:
+        for i in range(len(labels_pre)):
+            if i > 0:
+                f.write("{} {}\n".format(labels_pre[i], labels_post[i]))
+
+    f.close()
+
+
 if __name__ == '__main__':
     # combine_data()
     # generate_edges(filter_date='2020-3-31')
@@ -231,5 +280,7 @@ if __name__ == '__main__':
     # generate_effects_companies()
     # generate_effects_positions(position="Engineer")
     # generate_effects_positions(position="Research")
-    generate_effects_positions(position="Manager")
-    generate_effects_positions(position="Director")
+    # generate_effects_positions(position="Manager")
+    # generate_effects_positions(position="Director")
+
+    generate_base_node_attr()
